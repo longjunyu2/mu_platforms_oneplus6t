@@ -1,7 +1,7 @@
 # @file
 #
 # Copyright (c) Microsoft Corporation.
-# Copyright (c) 2021 Junyu Long <ljy122@qq.com>.
+# Copyright (c) 2021, Junyu Long <ljy122@qq.com>.
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 ##
 import os
