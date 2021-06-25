@@ -16,7 +16,6 @@
   MdeModulePkg/MdeModulePkg.dec
   EmbeddedPkg/EmbeddedPkg.dec
   ArmPkg/ArmPkg.dec
-  OnePlus6TPkg/OnePlus6TPkg.dec
 
 [LibraryClasses]
   BaseLib

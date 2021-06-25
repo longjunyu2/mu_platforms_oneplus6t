@@ -30,7 +30,6 @@
   ArmPkg/ArmPkg.dec
   MdePkg/MdePkg.dec
   EmbeddedPkg/EmbeddedPkg.dec
-  OnePlus6TPkg/OnePlus6TPkg.dec
 
 [LibraryClasses]
   IoLib

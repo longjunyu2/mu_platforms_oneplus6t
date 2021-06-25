@@ -29,7 +29,6 @@
   EmbeddedPkg/EmbeddedPkg.dec
   ArmPkg/ArmPkg.dec
   ArmPlatformPkg/ArmPlatformPkg.dec
-  OnePlus6TPkg/OnePlus6TPkg.dec
 
 [LibraryClasses]
   DebugLib

@@ -37,7 +37,6 @@
   ArmPlatformPkg/ArmPlatformPkg.dec
   MdeModulePkg/MdeModulePkg.dec
   MdePkg/MdePkg.dec
-  OnePlus6TPkg/OnePlus6TPkg.dec
 
 [LibraryClasses]
   ArmLib
