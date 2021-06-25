@@ -1,0 +1,30 @@
+[Defines]
+  INF_VERSION    = 0x00010005
+  BASE_NAME      = FrameBufferSerialPortLib
+  MODULE_TYPE    = BASE
+  VERSION_STRING = 1.0
+  LIBRARY_CLASS  = SerialPortLib
+
+[Sources.common]
+  FrameBufferSerialPortLib.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  ArmPkg/ArmPkg.dec
+  OnePlus6TPkg/OnePlus6TPkg.dec
+
+[LibraryClasses]
+  ArmLib
+  PcdLib
+  IoLib
+  HobLib
+  CompilerIntrinsicsLib
+  CacheMaintenanceLib
+
+[Pcd]
+  gOnePlus6TPkgTokenSpaceGuid.PcdMipiFrameBufferAddress
+  gOnePlus6TPkgTokenSpaceGuid.PcdMipiFrameBufferWidth
+  gOnePlus6TPkgTokenSpaceGuid.PcdMipiFrameBufferHeight
+  gOnePlus6TPkgTokenSpaceGuid.PcdMipiFrameBufferPixelBpp
+  gOnePlus6TPkgTokenSpaceGuid.PcdMipiFrameBufferVisibleWidth
+  gOnePlus6TPkgTokenSpaceGuid.PcdMipiFrameBufferVisibleHeight
