@@ -42,7 +42,7 @@ class Settings(CiSetupSettingsManager, CiBuildSettingsManager, UpdateSettingsMan
         ''' return iterable of edk2 packages supported by this build.
         These should be edk2 workspace relative paths '''
 
-        return ("OnePlus6TPkg")
+        return ("OnePlus6TPkg",)
 
     def GetArchitecturesSupported(self):
         ''' return iterable of edk2 architectures supported by this build '''
