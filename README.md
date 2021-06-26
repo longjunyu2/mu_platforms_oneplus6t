@@ -7,7 +7,7 @@ Project Mu based OnePlus6T Platform Repo. For Building Project Mu firmware of th
 - [x] Implement compilation with scripts.
 - [ ] Use upstream master branch of the OnePlus6TPkg from sdm845Pkg instead of specific modified branches.
 ### OnePlus6TPkg
-- [ ] Implement configuration of compilation environment with scripts.
+- [x] Implement configuration of compilation environment with scripts.
 - [ ] Compile and get the firmware FD(Flash Device).
 - [ ] Generate bootable Image file with DTB.
 
