@@ -11,8 +11,6 @@
 #  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #
 
-!include OnePlus6TPkg/CommonDsc.dsc.inc
-
 ################################################################################
 #
 # Defines Section - statements that will be processed to create a Makefile.
@@ -89,6 +87,10 @@
   #########################
   # Microsoft Project Mu 
   #########################
+  
+  # CPU/SMBUS/Peripherals Libraries
+  UefiCpuLib                   |UefiCpuPkg/Library/BaseUefiCpuLib/BaseUefiCpuLib.inf
+  LocalApicLib                 |UefiCpuPkg/Library/BaseXApicX2ApicLib/BaseXApicX2ApicLib.inf
   
   # Math Libraries
   FltUsedLib                   |MdePkg/Library/FltUsedLib/FltUsedLib.inf
@@ -196,6 +198,14 @@
    # Json parser
   JsonLiteParserLib            |MsCorePkg/Library/JsonLiteParser/JsonLiteParser.inf
   
+  # Sorter helper Libraries
+  OrderedCollectionLib         |MdePkg/Library/BaseOrderedCollectionRedBlackTreeLib/BaseOrderedCollectionRedBlackTreeLib.inf
+  
+  # Specific libraries
+  VmgExitLib                   |UefiCpuPkg/Library/VmgExitLibNull/VmgExitLibNull.inf
+  CapsulePersistLib            |MdeModulePkg/Library/CapsulePersistLibNull/CapsulePersistLibNull.inf
+  PcdDatabaseLoaderLib         |MdeModulePkg/Library/PcdDatabaseLoaderLib/Dxe/PcdDatabaseLoaderLibDxe.inf
+  DisplayUpdateProgressLib     |MdeModulePkg/Library/DisplayUpdateProgressLibGraphics/DisplayUpdateProgressLibGraphics.inf
 [LibraryClasses.common.SEC]
   PrePiLib                     |EmbeddedPkg/Library/PrePiLib/PrePiLib.inf
   ExtractGuidedSectionLib      |EmbeddedPkg/Library/PrePiExtractGuidedSectionLib/PrePiExtractGuidedSectionLib.inf
@@ -225,7 +235,7 @@
 [LibraryClasses.common.DXE_CORE, LibraryClasses.common.DXE_RUNTIME_DRIVER, LibraryClasses.common.UEFI_DRIVER, LibraryClasses.common.DXE_DRIVER, LibraryClasses.common.UEFI_APPLICATION]
   MsUiThemeLib                 |MsGraphicsPkg/Library/MsUiThemeLib/Dxe/MsUiThemeLib.inf
   MsPlatformEarlyGraphicsLib   |MsGraphicsPkg/Library/MsEarlyGraphicsLibNull/Dxe/MsEarlyGraphicsLibNull.inf
-  HwResetSystemLib             |MdeModulePkg/Library/DxeResetSystemLib/DxeResetSystemLib.inf
+  HwResetSystemLib             |ArmPkg/Library/ArmSmcPsciResetSystemLib/ArmSmcPsciResetSystemLib.inf
   DxeCoreEntryPoint            |MdePkg/Library/DxeCoreEntryPoint/DxeCoreEntryPoint.inf
   MemoryAllocationLib          |MdePkg/Library/UefiMemoryAllocationLib/UefiMemoryAllocationLib.inf
   CpuExceptionHandlerLib       |UefiCpuPkg/Library/CpuExceptionHandlerLib/DxeCpuExceptionHandlerLib.inf
@@ -332,7 +342,7 @@
   MdeModulePkg/Universal/SerialDxe/SerialDxe.inf
 !endif
 
-  MdeModulePkg/Universal/Variable/RuntimeDxe/VariableRuntimeDxe.inf
+  MdeModulePkg/Universal/Variable/RuntimeDxe/VariableSmmRuntimeDxe.inf
   
   ArmPkg/Drivers/ArmGic/ArmGicDxe.inf
   ArmPkg/Drivers/TimerDxe/TimerDxe.inf
@@ -461,3 +471,4 @@
 !ifdef $(INCLUDE_TFTP_COMMAND)
   ShellPkg/DynamicCommand/TftpDynamicCommand/TftpDynamicCommand.inf
 !endif #$(INCLUDE_TFTP_COMMAND)
+!include OnePlus6TPkg/CommonDsc.dsc.inc
