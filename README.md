@@ -1,6 +1,12 @@
 # Mu OnePlus6T Platform Repository
 Project Mu based OnePlus6T Platform Repo. For Building Project Mu firmware of the OnePlus6T Device.
 
+## Contents
+- [Current Status & Schedule](#current-status--schedule)
+- [Getting Started](#getting-started)
+- [Acknowledgement](#acknowledgement)
+- [License](#license)
+
 ## Current Status & Schedule
 ### Repository
 - [x] Implement configuration of compilation environment with scripts.
