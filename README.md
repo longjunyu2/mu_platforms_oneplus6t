@@ -167,19 +167,19 @@ For more information about these repositories, see [Project Mu](https://microsof
 4. Run stuart_setup to download required submodules.
 
     ```cmd
-    stuart_setup -c Platforms/OnePlus6TPkg/CISetting/PlatformBuild.py TOOL_CHAIN_TAG=VS2019
+    stuart_setup -c Platforms/OnePlus6TPkg/PlatformCI/PlatformBuild.py TOOL_CHAIN_TAG=VS2019
     ```
 
 5. Run stuart_update to download or update binary dependencies.
 
     ```cmd
-    stuart_update -c Platforms/OnePlus6TPkg/CISetting/PlatformBuild.py TOOL_CHAIN_TAG=VS2019
+    stuart_update -c Platforms/OnePlus6TPkg/PlatformCI/PlatformBuild.py TOOL_CHAIN_TAG=VS2019
     ```
 
 6. Run stuart_build to build and test the packages.
 
     ```cmd
-    stuart_build -c Platforms/OnePlus6TPkg/CISetting/PlatformBuild.py TOOL_CHAIN_TAG=VS2019
+    stuart_build -c Platforms/OnePlus6TPkg/PlatformCI/PlatformBuild.py TOOL_CHAIN_TAG=VS2019
     ```
 
 7. Open the build output for log files to debug any errors (usually in workspace/Build).
