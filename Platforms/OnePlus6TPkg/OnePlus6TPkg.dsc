@@ -126,8 +126,6 @@
   SecurityManagementLib        |MdeModulePkg/Library/DxeSecurityManagementLib/DxeSecurityManagementLib.inf
   BaseBinSecurityLib           |MdePkg/Library/BaseBinSecurityLibNull/BaseBinSecurityLibNull.inf
   SecurityLockAuditLib         |MdeModulePkg/Library/SecurityLockAuditDebugMessageLib/SecurityLockAuditDebugMessageLib.inf ##MU_CHANGE
-  LockBoxLib                   |OvmfPkg/Library/LockBoxLib/LockBoxBaseLib.inf
-  PlatformSecureLib            |OvmfPkg/Library/PlatformSecureLib/PlatformSecureLib.inf
   PasswordStoreLib             |MsCorePkg/Library/PasswordStoreLibNull/PasswordStoreLibNull.inf
   PasswordPolicyLib            |OemPkg/Library/PasswordPolicyLib/PasswordPolicyLib.inf
   MsSecureBootLib              |OemPkg/Library/MsSecureBootLib/MsSecureBootLib.inf
