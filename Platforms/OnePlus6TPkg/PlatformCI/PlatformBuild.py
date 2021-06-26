@@ -1,18 +1,13 @@
 # @file
-# Script to Build OnePlus6T Mu UEFI firmware
+# Script to Build Mu OnePlus6T UEFI firmware
 #
-# Copyright (c) 2021, Junyu Long <ljy122@qq.com>.
+# Copyright (c) 2021, Junyu Long <ljy122@qq.com>. 
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: BSD-2-Clause-Patent
 ##
 import os
 import logging
 import io
-import shutil
-import glob
-import time
-import xml.etree.ElementTree
-import tempfile
 
 from edk2toolext.environment import shell_environment
 from edk2toolext.environment.uefi_build import UefiBuilder
@@ -33,9 +28,18 @@ class CommonPlatform():
     PackagesSupported = ("OnePlus6TPkg",)
     ArchSupported = ("AARCH64")
     TargetsSupported = ("DEBUG", "RELEASE", "NOOPT")
-    Scopes = ('oneplus6t', 'edk2-build', 'cibuild')
-    WorkspaceRoot = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    PackagesPath = ("Platforms", "MU_BASECORE", "Common/MU", "Common/MU_TIANO", "Common/MU_OEM_SAMPLE", "Silicon/ARM/MU_TIANO")
+    Scopes = ('oneplus6t', 'edk2-build')
+    WorkspaceRoot = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))) # MU_CHANGE - support new workspace
+    PackagesPath = ("Platforms", "MU_BASECORE", "Common/MU", "Common/MU_TIANO", "Common/MU_OEM_SAMPLE", "Silicon/ARM/MU_TIANO") # MU_CHANGE add packages path
+
+    @classmethod
+    def GetDscName(cls, ArchCsv: str) -> str:
+        ''' return the DSC given the architectures requested.
+
+        ArchCsv: csv string containing all architectures to build
+        '''
+        dsc = "OnePlus6TPkg.dsc"
+        return dsc
 
 
     # ####################################################################################### #
@@ -62,13 +66,18 @@ class SettingsManager(UpdateSettingsManager, SetupSettingsManager, PrEvalSetting
         '''
         rs = []
 
+        # intentionally declare this one with recursive false to avoid overhead
+        # MU_CHANGE start - remove OpenSSL
+        #rs.append(RequiredSubmodule(
+        #    "CryptoPkg/Library/OpensslLib/openssl", False))
+        # MU_CHANGE end - remove OpenSSL
+
         # To avoid maintenance of this file for every new submodule
         # lets just parse the .gitmodules and add each if not already in list.
         # The GetRequiredSubmodules is designed to allow a build to optimize
         # the desired submodules but it isn't necessary for this repository.
         result = io.StringIO()
-        ret = RunCmd("git", "config --file .gitmodules --get-regexp path",
-                     workingdir=self.GetWorkspaceRoot(), outstream=result)
+        ret = RunCmd("git", "config --file .gitmodules --get-regexp path", workingdir=self.GetWorkspaceRoot(), outstream=result)
         # Cmd output is expected to look like:
         # submodule.CryptoPkg/Library/OpensslLib/openssl.path CryptoPkg/Library/OpensslLib/openssl
         # submodule.SoftFloat.path ArmPkg/Library/ArmSoftFloatLib/berkeley-softfloat-3
@@ -77,8 +86,7 @@ class SettingsManager(UpdateSettingsManager, SetupSettingsManager, PrEvalSetting
                 _, _, path = line.partition(" ")
                 if path is not None:
                     if path not in [x.path for x in rs]:
-                        # add it with recursive since we don't know
-                        rs.append(RequiredSubmodule(path, True))
+                        rs.append(RequiredSubmodule(path, True)) # add it with recursive since we don't know
         return rs
 
     def SetArchitectures(self, list_of_requested_architectures):
@@ -87,11 +95,9 @@ class SettingsManager(UpdateSettingsManager, SetupSettingsManager, PrEvalSetting
 
         Raise Exception if a list_of_requested_architectures is not supported
         '''
-        unsupported = set(list_of_requested_architectures) - \
-            set(self.GetArchitecturesSupported())
+        unsupported = set(list_of_requested_architectures) - set(self.GetArchitecturesSupported())
         if(len(unsupported) > 0):
-            errorString = (
-                "Unsupported Architecture Requested: " + " ".join(unsupported))
+            errorString = ( "Unsupported Architecture Requested: " + " ".join(unsupported))
             logging.critical( errorString )
             raise Exception( errorString )
         self.ActualArchitectures = list_of_requested_architectures
@@ -130,14 +136,13 @@ class SettingsManager(UpdateSettingsManager, SetupSettingsManager, PrEvalSetting
 
         The tuple should be (<workspace relative path to dsc file>, <input dictionary of dsc key value pairs>)
         '''
-        return ("OnePlus6TPkg/OnePlus6TPkg.dsc", {})
+        dsc = CommonPlatform.GetDscName(",".join(self.ActualArchitectures))
+        return (f"OnePlus6TPkg/{dsc}", {})
 
-    def GetName(self):
-        return "OnePlus6T"
+    def GetPackagesPath(self): # MU_CHANGE - use packages path
+        ''' Return a list of paths that should be mapped as edk2 PackagesPath ''' # MU_CHANGE - use packages path
+        return CommonPlatform.PackagesPath # MU_CHANGE - use packages path
 
-    def GetPackagesPath(self):
-        ''' Return a list of paths that should be mapped as edk2 PackagesPath '''
-        return CommonPlatform.PackagesPath
 
     # ####################################################################################### #
     #                         Actual Configuration for Platform Build                         #
@@ -148,18 +153,16 @@ class PlatformBuilder( UefiBuilder, BuildSettingsManager):
 
     def AddCommandLineOptions(self, parserObj):
         ''' Add command line options to the argparser '''
-
-        # In an effort to support common server based builds this parameter is added.  It is
-        # checked for correctness but is never uses as this platform only supports a single set of
-        # architectures.
         parserObj.add_argument('-a', "--arch", dest="build_arch", type=str, default="AARCH64",
-            help="Optional - CSV of architecture to build. AARCH64 is the only valid option for this platform.")
+            help="Optional - CSV of architecture to build."
+            "AARCH64 is the only valid option for this platform.")
 
     def RetrieveCommandLineOptions(self, args):
         '''  Retrieve command line options from the argparser '''
-        if args.build_arch.upper() != "AARCH64":
-            raise Exception("Invalid Arch Specified.  Please see comments in PlatformBuild.py::PlatformBuilder::AddCommandLineOptions")
 
+        shell_environment.GetBuildVars().SetValue("TARGET_ARCH"," ".join(args.build_arch.upper().split(",")), "From CmdLine")
+        dsc = CommonPlatform.GetDscName(args.build_arch)
+        shell_environment.GetBuildVars().SetValue("ACTIVE_PLATFORM", f"OnePlus6TPkg/{dsc}", "From CmdLine")
 
     def GetWorkspaceRoot(self):
         ''' get WorkspacePath '''
@@ -167,7 +170,7 @@ class PlatformBuilder( UefiBuilder, BuildSettingsManager):
 
     def GetPackagesPath(self):
         ''' Return a list of workspace relative paths that should be mapped as edk2 PackagesPath '''
-        return CommonPlatform.PackagesPath
+        return CommonPlatform.PackagesPath # MU_CHANGE - use packages path
 
     def GetActiveScopes(self):
         ''' return tuple containing scopes that should be active for this process '''
@@ -185,22 +188,12 @@ class PlatformBuilder( UefiBuilder, BuildSettingsManager):
         txt  == plain text file logging
         md   == markdown file logging
         '''
-        return logging.INFO
-        return super().GetLoggingLevel(loggerType)
+        return logging.DEBUG
 
     def SetPlatformEnv(self):
         logging.debug("PlatformBuilder SetPlatformEnv")
-        self.env.SetValue("PRODUCT_NAME", "OnePlus6T", "Platform Hardcoded")
-        self.env.SetValue("ACTIVE_PLATFORM", "OnePlus6TPkg/OnePlus6TPkg.dsc", "Platform Hardcoded")
-        self.env.SetValue("TARGET_ARCH", "AARCH64", "Platform Hardcoded")
-        # needed to make FV size build report happy
-        self.env.SetValue("BLD_*_BUILDID_STRING", "Unknown", "Default")
-        # Default turn on build reporting.
-        self.env.SetValue("BUILDREPORTING", "TRUE", "Enabling build report")
-        self.env.SetValue("BUILDREPORT_TYPES", "PCD DEPEX BUILD_FLAGS LIBRARY FIXED_ADDRESS HASH", "Setting build report types")
-        # Include the MFCI test cert by default, override on the commandline with "BLD_*_SHIP_MODE=TRUE" if you want the retail MFCI cert
-        self.env.SetValue("BLD_*_SHIP_MODE", "FALSE", "Default")
-
+        self.env.SetValue("PRODUCT_NAME", "OnePlus6TPkg", "Platform Hardcoded")
+        self.env.SetValue("MAKE_STARTUP_NSH", "FALSE", "Default to false")
         return 0
 
     def PlatformPreBuild(self):
@@ -209,125 +202,7 @@ class PlatformBuilder( UefiBuilder, BuildSettingsManager):
     def PlatformPostBuild(self):
         return 0
 
-class UnitTestSupport(object):
-
-    def __init__(self, host_efi_build_output_path: os.PathLike):
-        self.test_list = []
-        self._globlist = []
-        self.host_efi_path = host_efi_build_output_path
-
-    def set_test_regex(self, csv_string):
-        self._globlist = csv_string.split(",")
-
-    def find_tests(self):
-        test_list = []
-        for globpattern in self._globlist:
-            test_list.extend(glob.glob(os.path.join(self.host_efi_path, globpattern)))
-        self.test_list = list(dict.fromkeys(test_list))
-
-    def copy_tests_to_virtual_drive(self, virtualdrive):
-        for test in self.test_list:
-            virtualdrive.AddFile(test)
-    
-    def write_tests_to_startup_nsh(self,nshfile):
-        for test in self.test_list:
-            nshfile.AddLine(os.path.basename(test))
-
-    def report_results(self, virtualdrive) -> int:
-
-        #now parse the xml for errors
-        failure_count = 0
-        logging.info("UnitTest Completed")
-        for unit_test in self.test_list:
-            xml_result_file = os.path.basename(unit_test)[:-4] + "_JUNIT.XML"
-            try:
-                data = virtualdrive.GetFileContent(xml_result_file)
-            except:
-                logging.error(f"unit test ({unit_test}) produced no result file")
-                failure_count += 1
-                continue
-
-            logging.info('\n' + os.path.basename(unit_test))
-            try:
-                root = xml.etree.ElementTree.fromstring(data)
-                for suite in root:
-                    logging.info(" ")
-                    for case in suite:
-                        logging.info('\t\t' + case.attrib['classname'] + " - ")
-                        caseresult = "\t\t\tPASS"
-                        level = logging.INFO
-                        for result in case:
-                            if result.tag == 'failure':
-                                failure_count += 1
-                                level = logging.ERROR
-                                caseresult = "\t\tFAIL" + " - " + result.attrib['message']
-                        logging.log( level, caseresult)
-            except Exception as ex:
-                logging.error("Exception trying to read xml." + str(ex))
-                failure_count += 1
-        return failure_count
-
-class StartUpScriptManager(object):
-
-    FS_FINDER_SCRIPT = r'''
-#!/bin/nsh
-echo -off
-for %a run (0 10)
-    if exist fs%a:\{first_file} then
-        fs%a:
-        goto FOUND_IT
-    endif
-endfor
-
-:FOUND_IT
-'''
-
-    def __init__(self):
-        self._use_fs_finder = False
-        self._lines = []
-
-    def WriteOut(self, host_file_path, shutdown:bool):
-        with open(host_file_path, "w") as nsh:
-            if self._use_fs_finder:
-                this_file = os.path.basename(host_file_path)
-                nsh.write(StartUpScriptManager.FS_FINDER_SCRIPT.format(first_file=this_file))
-
-            for l in self._lines:
-                nsh.write(l + "\n")
-
-            if shutdown:
-                nsh.write("reset -s\n")
-
-    def AddLine(self, line):
-        self._lines.append(line.strip())
-        self._use_fs_finder = True
+    def FlashRomImage(self):
+        return 0
 
 
-
-if __name__ == "__main__":
-    import argparse
-    import sys
-    from edk2toolext.invocables.edk2_update import Edk2Update
-    from edk2toolext.invocables.edk2_setup import Edk2PlatformSetup
-    from edk2toolext.invocables.edk2_platform_build import Edk2PlatformBuild
-    print("Invoking Stuart")
-    SCRIPT_PATH = os.path.relpath(__file__)
-    parser = argparse.ArgumentParser(add_help=False)
-    parse_group = parser.add_mutually_exclusive_group()
-    parse_group.add_argument("--update", "--UPDATE",
-                             action='store_true', help="Invokes stuart_update")
-    parse_group.add_argument("--setup", "--SETUP",
-                             action='store_true', help="Invokes stuart_setup")
-    args, remaining = parser.parse_known_args()
-    new_args = ["stuart", "-c", SCRIPT_PATH]
-    new_args = new_args + remaining
-    sys.argv = new_args
-    if args.setup:
-        print("Running stuart_setup -c " + SCRIPT_PATH)
-        Edk2PlatformSetup().Invoke()
-    elif args.update:
-        print("Running stuart_update -c " + SCRIPT_PATH)
-        Edk2Update().Invoke()
-    else:
-        print("Running stuart_build -c " + SCRIPT_PATH)
-        Edk2PlatformBuild().Invoke()
