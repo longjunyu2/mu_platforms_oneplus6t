@@ -27,6 +27,7 @@
   VirtualRealTimeClockLib.c
 
 [Packages]
+  OnePlus6TPkg/OnePlus6TPkg.dec
   ArmPkg/ArmPkg.dec
   MdePkg/MdePkg.dec
   EmbeddedPkg/EmbeddedPkg.dec

@@ -10,6 +10,7 @@
   FrameBufferSerialPortLib.c
 
 [Packages]
+  OnePlus6TPkg/OnePlus6TPkg.dec
   MdePkg/MdePkg.dec
   ArmPkg/ArmPkg.dec
 
