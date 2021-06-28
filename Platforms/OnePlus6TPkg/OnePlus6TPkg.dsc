@@ -27,6 +27,9 @@
   SKUID_IDENTIFIER               = DEFAULT
   FLASH_DEFINITION               = OnePlus6TPkg/OnePlus6TPkg.fdf
 
+
+!include OnePlus6TPkg/CommonDsc.dsc.inc
+!include FrontpageDsc.inc
 ################################################################################
 #
 # Library Class section - list of all Library Classes needed by this Platform.
@@ -69,13 +72,30 @@
 
   # VariableRuntimeDxe Requirements
   SynchronizationLib           |MdePkg/Library/BaseSynchronizationLib/BaseSynchronizationLib.inf
-  AuthVariableLib              |SecurityPkg/Library/AuthVariableLib/AuthVariableLib.inf
+  AuthVariableLib              |MdeModulePkg/Library/AuthVariableLibNull/AuthVariableLibNull.inf
   TpmMeasurementLib            |MdeModulePkg/Library/TpmMeasurementLibNull/TpmMeasurementLibNull.inf
   VarCheckLib                  |MdeModulePkg/Library/VarCheckLib/VarCheckLib.inf
 
   # SimpleFbDxe
   FrameBufferBltLib            |MdeModulePkg/Library/FrameBufferBltLib/FrameBufferBltLib.inf
-
+  
+  PasswordPolicyLib            |OemPkg/Library/PasswordPolicyLib/PasswordPolicyLib.inf
+  MsSecureBootLib              |OemPkg/Library/MsSecureBootLib/MsSecureBootLib.inf
+  PlatformKeyLib               |OemPkg/Library/PlatformKeyLibNull/PlatformKeyLibNull.inf
+  RngLib                       |MdePkg/Library/BaseRngLibNull/BaseRngLibNull.inf
+  MemoryTypeInformationChangeLib |MdeModulePkg/Library/MemoryTypeInformationChangeLibNull/MemoryTypeInformationChangeLibNull.inf
+  MsPlatformDevicesLib         |PcBdsPkg/Library/MsPlatformDevicesLibNull/MsPlatformDevicesLibNull.inf
+  DfciSettingChangedNotificationLib |DfciPkg/Library/DfciSettingChangedNotificationLib/DfciSettingChangedNotificationLibNull.inf
+  DfciDeviceIdSupportLib       |DfciPkg/Library/DfciDeviceIdSupportLibNull/DfciDeviceIdSupportLibNull.inf
+  PlatformThemeLib             |MsGraphicsPkg/Library/SamplePlatformThemeLib/PlatformThemeLib.inf
+  OrderedCollectionLib         |MdePkg/Library/BaseOrderedCollectionRedBlackTreeLib/BaseOrderedCollectionRedBlackTreeLib.inf
+  MemoryProtectionLib          |MdeModulePkg/Library/BaseMemoryProtectionLibNull/BaseMemoryProtectionLibNull.inf
+  CapsulePersistLib            |MdeModulePkg/Library/CapsulePersistLibNull/CapsulePersistLibNull.inf
+  HwResetSystemLib             |ArmPkg/Library/ArmSmcPsciResetSystemLib/ArmSmcPsciResetSystemLib.inf
+  MmUnblockMemoryLib             |MdePkg/Library/MmUnblockMemoryLib/MmUnblockMemoryLibNull.inf
+  PcdDatabaseLoaderLib         |MdeModulePkg/Library/PcdDatabaseLoaderLib/Dxe/PcdDatabaseLoaderLibDxe.inf
+  VariablePolicyHelperLib      |MdeModulePkg/Library/VariablePolicyHelperLib/VariablePolicyHelperLib.inf
+  
 !if $(TARGET) != RELEASE
   SerialPortLib                |OnePlus6TPkg/Library/FrameBufferSerialPortLib/FrameBufferSerialPortLib.inf
 !endif
@@ -83,129 +103,7 @@
   PlatformBootManagerLib       |OnePlus6TPkg/Library/PlatformBootManagerLib/PlatformBootManagerLib.inf
   MemoryInitPeiLib             |OnePlus6TPkg/Library/MemoryInitPeiLib/PeiMemoryAllocationLib.inf
   PlatformPeiLib               |OnePlus6TPkg/Library/PlatformPeiLib/PlatformPeiLib.inf
-  
-  #########################
-  # Microsoft Project Mu 
-  #########################
-  
-  # CPU/SMBUS/Peripherals Libraries
-  UefiCpuLib                   |UefiCpuPkg/Library/BaseUefiCpuLib/BaseUefiCpuLib.inf
-  LocalApicLib                 |UefiCpuPkg/Library/BaseXApicX2ApicLib/BaseXApicX2ApicLib.inf
-  
-  # Math Libraries
-  FltUsedLib                   |MdePkg/Library/FltUsedLib/FltUsedLib.inf
-  MathLib                      |MsCorePkg/Library/MathLib/MathLib.inf
-  SafeIntLib                   |MdePkg/Library/BaseSafeIntLib/BaseSafeIntLib.inf
-  
-  # Whea Libraries
-  MsWheaEarlyStorageLib        |MsWheaPkg/Library/MsWheaEarlyStorageLibNull/MsWheaEarlyStorageLibNull.inf
-  MuTelemetryHelperLib         |MsWheaPkg/Library/MuTelemetryHelperLib/MuTelemetryHelperLib.inf
-  
-  # Boot and Boot Policy
-  MsBootPolicyLib              |OemPkg/Library/MsBootPolicyLib/MsBootPolicyLib.inf
-  DeviceBootManagerLib         |PcBdsPkg/Library/DeviceBootManagerLib/DeviceBootManagerLib.inf
-  MsAltBootLib                 |OemPkg/Library/MsAltBootLib/MsAltBootLib.inf # interfaces with alternate boot variable
-  MsBootOptionsLib             |PcBdsPkg/Library/MsBootOptionsLib/MsBootOptionsLib.inf # attached to BdsDxe to implement Microsoft extensions to UefiBootManagerLib.
-  MsBootManagerSettingsLib     |PcBdsPkg/Library/MsBootManagerSettingsDxeLib/MsBootManagerSettingsDxeLib.inf
-  
-  # UI and graphics
-  BootGraphicsProviderLib      |OemPkg/Library/BootGraphicsProviderLib/BootGraphicsProviderLib.inf #  uses PCDs and raw files in the firmware volumes to get Pcd
-  BootGraphicsLib              |MsGraphicsPkg/Library/BootGraphicsLib/BootGraphicsLib.inf
-  GraphicsConsoleHelperLib     |PcBdsPkg/Library/GraphicsConsoleHelperLib/GraphicsConsoleHelper.inf
-  DisplayDeviceStateLib        |MsGraphicsPkg/Library/ColorBarDisplayDeviceStateLib/ColorBarDisplayDeviceStateLib.inf # Display the On screen notifications for the platform using color bars
-  UIToolKitLib                 |MsGraphicsPkg/Library/SimpleUIToolKit/SimpleUIToolKit.inf
-  MsColorTableLib              |MsGraphicsPkg/Library/MsColorTableLib/MsColorTableLib.inf
-  SwmDialogsLib                |MsGraphicsPkg/Library/SwmDialogsLib/SwmDialogs.inf #  Dialog Boxes in a Simple Window Manager environment.
-  DeviceStateLib               |MdeModulePkg/Library/DeviceStateLib/DeviceStateLib.inf
-  UiRectangleLib               |MsGraphicsPkg/Library/BaseUiRectangleLib/BaseUiRectangleLib.inf
-  MsUiThemeCopyLib             |MsGraphicsPkg/Library/MsUiThemeCopyLib/MsUiThemeCopyLib.inf # handles copying the theme
-  # PlatformThemeLib           |QemuQ35Pkg/Library/PlatformThemeLib/PlatformThemeLib.inf # Q35 theme
-  
-  # Capsule/Versioning Libraries
-  MuUefiVersionLib             |OemPkg/Library/MuUefiVersionLib/MuUefiVersionLib.inf
-  
-  # Security Libraries
-  SecurityManagementLib        |MdeModulePkg/Library/DxeSecurityManagementLib/DxeSecurityManagementLib.inf
-  BaseBinSecurityLib           |MdePkg/Library/BaseBinSecurityLibNull/BaseBinSecurityLibNull.inf
-  SecurityLockAuditLib         |MdeModulePkg/Library/SecurityLockAuditDebugMessageLib/SecurityLockAuditDebugMessageLib.inf ##MU_CHANGE
-  PasswordStoreLib             |MsCorePkg/Library/PasswordStoreLibNull/PasswordStoreLibNull.inf
-  PasswordPolicyLib            |OemPkg/Library/PasswordPolicyLib/PasswordPolicyLib.inf
-  MsSecureBootLib              |OemPkg/Library/MsSecureBootLib/MsSecureBootLib.inf
-  PlatformKeyLib               |OemPkg/Library/PlatformKeyLibNull/PlatformKeyLibNull.inf
-  
-  # Memory Libraries
-  MemoryTypeInfoSecVarCheckLib   |MdeModulePkg/Library/MemoryTypeInfoSecVarCheckLib/MemoryTypeInfoSecVarCheckLib.inf # MU_CHANGE TCBZ1086
-  MemoryTypeInformationChangeLib |MdeModulePkg/Library/MemoryTypeInformationChangeLibNull/MemoryTypeInformationChangeLibNull.inf
-  MtrrLib                        |UefiCpuPkg/Library/MtrrLib/MtrrLib.inf # Memory Type Range Register (https://en.wikipedia.org/wiki/Memory_type_range_register)
-  MmUnblockMemoryLib             |MdePkg/Library/MmUnblockMemoryLib/MmUnblockMemoryLibNull.inf
-  MemoryProtectionLib            |MdeModulePkg/Library/BaseMemoryProtectionLibNull/BaseMemoryProtectionLibNull.inf
-  
-  # Variable Libraries
-  VariablePolicyLib            |MdeModulePkg/Library/VariablePolicyLib/VariablePolicyLib.inf
-  VariablePolicyHelperLib      |MdeModulePkg/Library/VariablePolicyHelperLib/VariablePolicyHelperLib.inf
-  AuthVariableLib              |SecurityPkg/Library/AuthVariableLib/AuthVariableLib.inf
-  VarCheckLib                  |MdeModulePkg/Library/VarCheckLib/VarCheckLib.inf
-  
-  # Crypto Libraries
-  TlsLib                       |CryptoPkg/Library/TlsLib/TlsLib.inf
-  RngLib                       |MdePkg/Library/BaseRngLibNull/BaseRngLibNull.inf
-  
-  # Power/Thermal/Power State Libraries
-  MsNVBootReasonLib            |OemPkg/Library/MsNVBootReasonLib/MsNVBootReasonLib.inf # interface on Reboot Reason non volatile variables
-  ResetUtilityLib              |MdeModulePkg/Library/ResetUtilityLib/ResetUtilityLib.inf
-  S3BootScriptLib              |MdeModulePkg/Library/PiDxeS3BootScriptLib/DxeS3BootScriptLib.inf
-  PowerServicesLib             |PcBdsPkg/Library/PowerServicesLibNull/PowerServicesLibNull.inf
-  ThermalServicesLib           |PcBdsPkg/Library/ThermalServicesLibNull/ThermalServicesLibNull.inf
-  MsPlatformPowerCheckLib      |PcBdsPkg/Library/MsPlatformPowerCheckLibNull/MsPlatformPowerCheckLibNull.inf
-  
-  # TPM Libraries
-  OemTpm2InitLib               |SecurityPkg/Library/OemTpm2InitLibNull/OemTpm2InitLib.inf
-  Tpm2DebugLib                 |SecurityPkg/Library/Tpm2DebugLib/Tpm2DebugLibNull.inf
-  Tpm12CommandLib              |SecurityPkg/Library/Tpm12CommandLib/Tpm12CommandLib.inf
-  Tpm2CommandLib               |SecurityPkg/Library/Tpm2CommandLib/Tpm2CommandLib.inf
-  Tpm2DeviceLib                |SecurityPkg/Library/Tpm2DeviceLibTcg2/Tpm2DeviceLibTcg2.inf
-  Tcg2PpVendorLib              |SecurityPkg/Library/Tcg2PpVendorLibNull/Tcg2PpVendorLibNull.inf
-  OemTpm2InitLib               |SecurityPkg/Library/OemTpm2InitLibNull/OemTpm2InitLib.inf
-!if $(TPM_ENABLE) == TRUE
-  TpmMeasurementLib            |SecurityPkg/Library/DxeTpmMeasurementLib/DxeTpmMeasurementLib.inf
-  Tpm2DebugLib                 |SecurityPkg/Library/Tpm2DebugLib/Tpm2DebugLibSimple.inf
-!endif
 
-  # Shell Libraries
-  ShellCommandLib              |ShellPkg/Library/UefiShellCommandLib/UefiShellCommandLib.inf
-  ShellCEntryLib               |ShellPkg/Library/UefiShellCEntryLib/UefiShellCEntryLib.inf
-  HandleParsingLib             |ShellPkg/Library/UefiHandleParsingLib/UefiHandleParsingLib.inf
-  BcfgCommandLib               |ShellPkg/Library/UefiShellBcfgCommandLib/UefiShellBcfgCommandLib.inf
-  
-  # DFCI / XML / JSON Libraries
-  DfciUiSupportLib             |DfciPkg/Library/DfciUiSupportLibNull/DfciUiSupportLibNull.inf # Supports DFCI Groups.
-  DfciV1SupportLib             |DfciPkg/Library/DfciV1SupportLibNull/DfciV1SupportLibNull.inf # Backwards compatibility with DFCI V1 functions.
-  DfciDeviceIdSupportLib       |DfciPkg/Library/DfciDeviceIdSupportLibNull/DfciDeviceIdSupportLibNull.inf
-  DfciGroupLib                 |DfciPkg/Library/DfciGroupLibNull/DfciGroups.inf
-  DfciRecoveryLib              |DfciPkg/Library/DfciRecoveryLib/DfciRecoveryLib.inf
-   # Zero Touch is part of DFCI
-  ZeroTouchSettingsLib              |ZeroTouchPkg/Library/ZeroTouchSettings/ZeroTouchSettings.inf
-   # Libraries that understands the MsXml Settings Schema and providers helper functions
-  DfciXmlIdentitySchemaSupportLib   |DfciPkg/Library/DfciXmlIdentitySchemaSupportLib/DfciXmlIdentitySchemaSupportLib.inf
-  DfciXmlDeviceIdSchemaSupportLib   |DfciPkg/Library/DfciXmlDeviceIdSchemaSupportLib/DfciXmlDeviceIdSchemaSupportLib.inf
-  DfciXmlSettingSchemaSupportLib    |DfciPkg/Library/DfciXmlSettingSchemaSupportLib/DfciXmlSettingSchemaSupportLib.inf
-  DfciXmlPermissionSchemaSupportLib |DfciPkg/Library/DfciXmlPermissionSchemaSupportLib/DfciXmlPermissionSchemaSupportLib.inf
-  DfciXmlIdentitySchemaSupportLib   |DfciPkg/Library/DfciXmlIdentitySchemaSupportLib/DfciXmlIdentitySchemaSupportLib.inf
-  DfciSettingChangedNotificationLib |DfciPkg/Library/DfciSettingChangedNotificationLib/DfciSettingChangedNotificationLibNull.inf
-   #XML libraries
-  XmlTreeQueryLib              |XmlSupportPkg/Library/XmlTreeQueryLib/XmlTreeQueryLib.inf
-  XmlTreeLib                   |XmlSupportPkg/Library/XmlTreeLib/XmlTreeLib.inf
-   # Json parser
-  JsonLiteParserLib            |MsCorePkg/Library/JsonLiteParser/JsonLiteParser.inf
-  
-  # Sorter helper Libraries
-  OrderedCollectionLib         |MdePkg/Library/BaseOrderedCollectionRedBlackTreeLib/BaseOrderedCollectionRedBlackTreeLib.inf
-  
-  # Specific libraries
-  VmgExitLib                   |UefiCpuPkg/Library/VmgExitLibNull/VmgExitLibNull.inf
-  CapsulePersistLib            |MdeModulePkg/Library/CapsulePersistLibNull/CapsulePersistLibNull.inf
-  PcdDatabaseLoaderLib         |MdeModulePkg/Library/PcdDatabaseLoaderLib/Dxe/PcdDatabaseLoaderLibDxe.inf
-  DisplayUpdateProgressLib     |MdeModulePkg/Library/DisplayUpdateProgressLibGraphics/DisplayUpdateProgressLibGraphics.inf
 [LibraryClasses.common.SEC]
   PrePiLib                     |EmbeddedPkg/Library/PrePiLib/PrePiLib.inf
   ExtractGuidedSectionLib      |EmbeddedPkg/Library/PrePiExtractGuidedSectionLib/PrePiExtractGuidedSectionLib.inf
@@ -215,30 +113,6 @@
   PlatformPeiLib               |OnePlus6TPkg/Library/PlatformPeiLib/PlatformPeiLib.inf
   PrePiHobListPointerLib       |ArmPlatformPkg/Library/PrePiHobListPointerLib/PrePiHobListPointerLib.inf
   
-[LibraryClasses.common.PEIM]
-  MsPlatformEarlyGraphicsLib   |MsGraphicsPkg/Library/MsEarlyGraphicsLibNull/Pei/MsEarlyGraphicsLibNull.inf
-  MsUiThemeLib                 |MsGraphicsPkg/Library/MsUiThemeLib/Pei/MsUiThemeLib.inf
-!if $(SOURCE_DEBUG_ENABLE) == TRUE
-  DebugAgentLib                |SourceLevelDebugPkg/Library/DebugAgent/SecPeiDebugAgentLib.inf
-!endif
-!if $(TPM_ENABLE) == TRUE
-  Tpm12DeviceLib               |SecurityPkg/Library/Tpm12DeviceLibDTpm/Tpm12DeviceLibDTpm.inf
-  Tpm2DeviceLib                |SecurityPkg/Library/Tpm2DeviceLibDTpm/Tpm2DeviceLibDTpm.inf
-  SourceDebugEnabledLib        |SourceLevelDebugPkg/Library/SourceDebugEnabled/SourceDebugEnabledLib.inf
-  Tcg2PreUefiEventLogLib       |SecurityPkg/Library/TempPreUefiEventLogLib/TempPreUefiEventLogLib.inf ## BRET - Do we have a null instance
-!endif
-
-#########################################
-# DXE Libraries
-#########################################
-# Common to all DXE phases
-[LibraryClasses.common.DXE_CORE, LibraryClasses.common.DXE_RUNTIME_DRIVER, LibraryClasses.common.UEFI_DRIVER, LibraryClasses.common.DXE_DRIVER, LibraryClasses.common.UEFI_APPLICATION]
-  MsUiThemeLib                 |MsGraphicsPkg/Library/MsUiThemeLib/Dxe/MsUiThemeLib.inf
-  MsPlatformEarlyGraphicsLib   |MsGraphicsPkg/Library/MsEarlyGraphicsLibNull/Dxe/MsEarlyGraphicsLibNull.inf
-  HwResetSystemLib             |ArmPkg/Library/ArmSmcPsciResetSystemLib/ArmSmcPsciResetSystemLib.inf
-  DxeCoreEntryPoint            |MdePkg/Library/DxeCoreEntryPoint/DxeCoreEntryPoint.inf
-  MemoryAllocationLib          |MdePkg/Library/UefiMemoryAllocationLib/UefiMemoryAllocationLib.inf
-  CpuExceptionHandlerLib       |UefiCpuPkg/Library/CpuExceptionHandlerLib/DxeCpuExceptionHandlerLib.inf
 
 ################################################################################
 #
@@ -300,6 +174,8 @@
   gOnePlus6TPkgTokenSpaceGuid.PcdMipiFrameBufferAddress|0x9d400000
 
   gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiExposedTableVersions|0x20
+  
+  gEfiMdeModulePkgTokenSpaceGuid.PcdPlatformRecoverySupported|FALSE
 
 ################################################################################
 #
@@ -471,4 +347,3 @@
 !ifdef $(INCLUDE_TFTP_COMMAND)
   ShellPkg/DynamicCommand/TftpDynamicCommand/TftpDynamicCommand.inf
 !endif #$(INCLUDE_TFTP_COMMAND)
-!include OnePlus6TPkg/CommonDsc.dsc.inc
