@@ -24,6 +24,7 @@
   MemoryInitPeiLib.c
 
 [Packages]
+  OnePlus6TPkg/OnePlus6TPkg.dec
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
   EmbeddedPkg/EmbeddedPkg.dec
