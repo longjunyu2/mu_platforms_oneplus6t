@@ -33,3 +33,4 @@
   gOnePlus6TPkgTokenSpaceGuid.PcdMipiFrameBufferVisibleHeight|2160|UINT32|0x0000a405
   # RTC information
   gOnePlus6TPkgTokenSpaceGuid.PcdBootShimInfo1|0xb0000000|UINT64|0x00000a601
+  gEfiMdeModulePkgTokenSpaceGuid.PcdPlatformRecoverySupported|FALSE|BOOLEAN|0x0000a406
