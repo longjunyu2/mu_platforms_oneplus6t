@@ -387,6 +387,6 @@ static ARM_MEMORY_REGION_DESCRIPTOR_EX gDeviceMemoryDescriptorEx[] = {
      EFI_RESOURCE_ATTRIBUTE_UNCACHEABLE, ARM_MEMORY_REGION_ATTRIBUTE_DEVICE,
      AddDev, EfiMemoryMappedIO},
     /* Terminator */
-    {}};
+    {0,0,0,0,0,0,0}};
 
 #endif
