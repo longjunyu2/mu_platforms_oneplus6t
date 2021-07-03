@@ -100,7 +100,6 @@
   SerialPortLib                |OnePlus6TPkg/Library/FrameBufferSerialPortLib/FrameBufferSerialPortLib.inf
 !endif
 
-  PlatformBootManagerLib       |OnePlus6TPkg/Library/PlatformBootManagerLib/PlatformBootManagerLib.inf
   MemoryInitPeiLib             |OnePlus6TPkg/Library/MemoryInitPeiLib/PeiMemoryAllocationLib.inf
   PlatformPeiLib               |OnePlus6TPkg/Library/PlatformPeiLib/PlatformPeiLib.inf
 

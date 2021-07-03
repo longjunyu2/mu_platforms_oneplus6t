@@ -33,6 +33,7 @@
   SmbiosPlatformDxe.c
 
 [Packages]
+  OnePlus6TPkg/OnePlus6TPkg.dec
   ArmPkg/ArmPkg.dec
   ArmPlatformPkg/ArmPlatformPkg.dec
   MdeModulePkg/MdeModulePkg.dec
