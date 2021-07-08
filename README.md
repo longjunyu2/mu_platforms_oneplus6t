@@ -45,7 +45,7 @@ For more information about these repositories, see [Project Mu](https://microsof
 
 1. The packages we need to install include **Python-3**, **Git**, **abootimg** .
     ``` shell
-    sudo apt-get install python3 git abootimg
+    sudo apt-get install python3 git abootimg python3-venv python3-pip
     ```
 
 #### Cross Compiler Tool Chain
@@ -61,7 +61,7 @@ For more information about these repositories, see [Project Mu](https://microsof
     ``` shell
     xz -d gcc-linaro-7.4.1-2019.02-x86_64_aarch64-linux-gnu.tar.xz
     tar xvf gcc-linaro-7.4.1-2019.02-x86_64_aarch64-linux-gnu.tar
-    ···
+    ```
     
 4. Add the toolchain to environment variable.
     ``` shell
