@@ -262,7 +262,7 @@ For more information about these repositories, see [Project Mu](https://microsof
     mkdir img
     cp Build/OnePlus6TPkg/DEBUG_<your toolchian tag>/FV/ONEPLUS6TPKG_UEFI.fd ./img
     cp dtb/fajita.dtb ./img
-    cat > ./img/ramdisk
+    echo > ./img/ramdisk
     ```
 2. Using abootimg tool to generate image.
     ``` shell
