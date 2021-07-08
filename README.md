@@ -43,7 +43,7 @@ For more information about these repositories, see [Project Mu](https://microsof
     
 #### Install Package
 
-1. The packages we need to install include **Python-3**, **Git**, ***abootimg*** .
+1. The packages we need to install include **Python-3**, **Git**, **abootimg** .
     ``` shell
     sudo apt-get install python3 git abootimg
     ```
